@@ -50,6 +50,13 @@
   blockedPathMessages[7] = "The trees are too thick to pass.";
   blockedPathMessages[8] = "You're too scared to go that way.";
 
+  //Initialize items
+  let items = ["flute", "stone", "sword"];
+  let itemLocations = [1, 6, 8];
+
+  //Initialize backpack
+  let backpack = [];
+
   //Set the player's starting location
   let mapLocation = 4;
 
@@ -61,8 +68,13 @@
 
   //Create an array of actions the game understands
   //and a variable to store the current action
-  const actionsIKnow = ["north","east","south","west"];
+  const actionsIKnow = ["north", "east", "south", "west", "take", "use", "drop"];
   let action = "";
+
+  //Create an array of items the game understands
+  //and a variable to track the item the player chooses
+  let itemsIKnow = ["flute", "stone", "sword"]
+  let item = "";
 
   //The image element
   let image = document.querySelector("img");
@@ -95,6 +107,67 @@
     }
   }
 
+  function takeItem()
+  {
+    //Find the index number of the item in the items array
+    let itemIndexNumber = items.indexOf(item);
+
+    //Does the item exist in the game worls and is it at the players location?
+    if(itemIndexNumber !== -1 && itemLocations[itemIndexNumber] === mapLocation)
+    {
+      gameMessage = "You take the " + item + ".";
+
+      //Add the item to the player's backpack
+      backpack.push(item);
+
+      //Remove the item from the game world
+      items.splice(itemIndexNumber, 1);
+      itemLocations.splice(itemIndexNumber, 1);
+    }
+    else {
+      {
+        //Message if the player tries to take an item that isn't in the current location
+        gameMessage = "You can't do that.";
+      }
+    }
+  }
+
+  function dropItem()
+  {
+    //try to drop item only if the backpack isn't empty
+    if(backpack.length !== 0)
+    {
+      //Find the item's array index number in the backpack
+      let backpackIndexNumber = backpack.indexOf(item);
+
+      //Check if the item is in the backpack
+      if(backpackIndexNumber !== -1)
+      {
+
+        //Tell the player that the item has been dropped
+        gameMessage = "You drop the " + item + ".";
+
+        //Add the item from the backpack to the game world
+        items.push(backpack[backpackIndexNumber]);
+        itemLocations.push(mapLocation);
+
+        //Remove the item from the player's backpack
+        backpack.splice(backpackIndexNumber, 1);
+      }
+      else
+      {
+        //Message if the palyer tries to drop something that's not in the backpack
+        gameMessage = "You can't do that.";
+      }
+      }
+      else {
+        {
+          //Message if the backpack is empty
+          gameMessage = "You're not carrying anything."
+        }
+      }
+    }
+
   function playGame()
   {
     //Get the player's input and convert it to lowercase
@@ -113,6 +186,16 @@
         action = actionsIKnow[i];
         console.log("Player's action: " + action);
         break;
+      }
+    }
+
+    //Figure out if the player references an item
+    for(i = 0; i < itemsIKnow.length; i++)
+    {
+      if (playersInput.indexOf(itemsIKnow[i]) !== -1)
+      {
+        item = itemsIKnow[i];
+        console.log("players item: " + item);
       }
     }
 
@@ -163,6 +246,18 @@
         }
         break;
 
+      case "take":
+        takeItem();
+        break;
+
+      case "drop":
+        dropItem();
+        break;
+
+      case "use":
+        useItem();
+        break;
+
       default:
         gameMessage = "I don't understand that.";
     }
@@ -177,8 +272,26 @@
     output.innerHTML = map[mapLocation];
     image.src = "../images/" + images[mapLocation];
 
+    //Display an item if there is one in this location
+    //1. Loop through all the game items
+    for(let i = 0; i < items.length; i++)
+    {
+      //Find out if there's an item at this location
+      if(mapLocation === itemLocations[i])
+      {
+        //Display it
+        output.innerHTML += "<br>You see a <strong>" + items[i] + "</strong> here.";
+      }
+    }
+
     //Display game message
     output.innerHTML += "<br><em>" + gameMessage + "</em>";
+
+    //Display what the player is carrying in their backpack
+    if(backpack.length !== 0)
+    {
+      output.innerHTML += "<br>Your are carrying: " + backpack.join(", ");
+    }
 
     //Reset the input field
     input.value = null;
