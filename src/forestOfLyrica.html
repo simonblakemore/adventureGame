@@ -50,6 +50,18 @@
   blockedPathMessages[7] = "The trees are too thick to pass.";
   blockedPathMessages[8] = "You're too scared to go that way.";
 
+  //Help messages
+  let helpMessages = [];
+  helpMessages[0] = "";
+  helpMessages[1] = "I wonder if you could 'use' something to find out how deep the well is?";
+  helpMessages[2] = "";
+  helpMessages[3] = "Maybe if you find a sword, you could slay the dragon:";
+  helpMessages[4] = "";
+  helpMessages[5] = "";
+  helpMessages[6] = "";
+  helpMessages[7] = "";
+  helpMessages[8] = "This seems like a nice place for music.";
+
   //Initialize items
   let items = ["flute", "stone", "sword"];
   let itemLocations = [1, 6, 8];
@@ -68,7 +80,7 @@
 
   //Create an array of actions the game understands
   //and a variable to store the current action
-  const actionsIKnow = ["north", "east", "south", "west", "take", "use", "drop"];
+  const actionsIKnow = ["north", "east", "south", "west", "take", "use", "drop", "help"];
   let action = "";
 
   //Create an array of items the game understands
@@ -313,6 +325,17 @@
 
       case "use":
         useItem();
+        break;
+
+      case "help":
+        //Display a hint if there is one for this location
+        if(helpMessages[mapLocation] !== "")
+        {
+          gameMessage = helpMessages[mapLocation] + " ";
+        }
+        gameMessage += "Try any of these words: ";
+        gameMessage += "north, south, east, west, take, drop, ";
+        gameMessage += "use, stone, flute, sword.";
         break;
 
       default:
