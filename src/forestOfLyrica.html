@@ -63,8 +63,8 @@
   helpMessages[8] = "This seems like a nice place for music.";
 
   //Initialize items
-  let items = ["flute", "stone", "sword"];
-  let itemLocations = [1, 6, 8];
+  let items = ["stone"];
+  let itemLocations = [6];
 
   //Initialize backpack
   let backpack = [];
@@ -206,13 +206,29 @@
       switch(item)
       {
         case "flute":
-          gameMessage = "Beautiful music fills the air.";
+          if(mapLocation === 8)
+          {
+            gameMessage = "Beautiful music fills the air.";
+            gameMessage += " A wizened old man steps outside";
+            gameMessage += " and hands you a sword!";
+
+            //Add the sword to the world
+            items.push("sword");
+            itemLocations.push(mapLocation);
+          }
+          else
+          {
+            gameMessage = "You try to play the flute";
+            gameMessage += " but it makes no sound here.";
+          }
           break;
+
 
         case "sword":
           if(mapLocation ===3)
           {
             gameMessage = "You swing the sword and slay the dragon!";
+            gameMessage += " You have saved the forest of Lyrica!";
           }
           else
           {
@@ -224,9 +240,14 @@
           if(mapLocation === 1)
           {
             gameMessage = "You drop the stone in the well.";
+            gameMessage += " A magical flute appears!";
 
-            //Remove the item from the player's backpack
+            //Remove the stone from the player's backpack
             backpack.splice(backpackIndexNumber, 1);
+
+            //Add the flute to the world
+            items.push("flute");
+            itemLocations.push(mapLocation);
           }
           else
           {
