@@ -168,6 +168,63 @@
       }
     }
 
+  function useItem()
+  {
+    //1. Find out if the item is in the backpack
+    //Find the item's array index in the backpack
+    let backpackIndexNumber = backpack.indexOf(item);
+
+    //If the index number is -1, then it isn't in the backpack.
+    //Tell the player that they are not carrying it.
+    if(backpackIndexNumber === -1)
+    {
+      gameMessage = "You're not carrying it.";
+    }
+
+    //If there are no items in the backpack then
+    //tell the players the backpack is empty
+    if(backpack.length ===0)
+    {
+      gameMessage += " Your backpack is empty.";
+    }
+
+    //2. If the item is found in the backpack figure out what to do with it
+    if(backpackIndexNumber !== -1)
+    {
+      switch(item)
+      {
+        case "flute":
+          gameMessage = "Beautiful music fills the air.";
+          break;
+
+        case "sword":
+          if(mapLocation ===3)
+          {
+            gameMessage = "You swing the sword and slay the dragon!";
+          }
+          else
+          {
+            gameMessage = "You swing the sword listlessly.";
+          }
+          break;
+
+        case "stone":
+          if(mapLocation === 1)
+          {
+            gameMessage = "You drop the stone in the well.";
+
+            //Remove the item from the player's backpack
+            backpack.splice(backpackIndexNumber, 1);
+          }
+          else
+          {
+            gameMessage = "You fumble with the stone in your pocket.";
+          }
+          break;
+      }
+    }
+  }
+
   function playGame()
   {
     //Get the player's input and convert it to lowercase
